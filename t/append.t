@@ -11,7 +11,7 @@ use File::chdir;
 use File::Path qw(remove_tree);
 use File::Slurp;
 use File::Temp qw(tempdir);
-use File::Truncate::Undoable;
+use File::Append::Undoable;
 use Test::More 0.98;
 use Test::Perinci::Tx::Manager qw(test_tx_action);
 
@@ -21,8 +21,8 @@ $CWD = $tmpdir;
 test_tx_action(
     name          => "path doesn't exist -> error",
     tmpdir        => $tmpdir,
-    f             => "File::Truncate::Undoable::truncate",
-    args          => {path=>"p"},
+    f             => "File::Append::Undoable::append",
+    args          => {path=>"p", string=>"foo"},
     reset_state   => sub {
         remove_tree "p";
     },
@@ -31,8 +31,8 @@ test_tx_action(
 test_tx_action(
     name          => "path is a dir -> error",
     tmpdir        => $tmpdir,
-    f             => "File::Truncate::Undoable::truncate",
-    args          => {path=>"p"},
+    f             => "File::Append::Undoable::append",
+    args          => {path=>"p", string=>"foo"},
     reset_state   => sub {
         remove_tree "p";
         mkdir "p";
@@ -42,46 +42,46 @@ test_tx_action(
 test_tx_action(
     name          => "path is a symlink -> error",
     tmpdir        => $tmpdir,
-    f             => "File::Truncate::Undoable::truncate",
-    args          => {path=>"p"},
+    f             => "File::Append::Undoable::append",
+    args          => {path=>"p", string=>"foo"},
     reset_state   => sub {
         remove_tree "p";
         symlink "q", "p";
     },
     status        => 412,
-) if symlink("", "");
+) if eval { symlink "", ""; 1 };
 test_tx_action(
-    name          => "path is an empty file -> noop",
+    name          => "file already contains string -> noop",
     tmpdir        => $tmpdir,
-    f             => "File::Truncate::Undoable::truncate",
-    args          => {path=>"p"},
+    f             => "File::Append::Undoable::append",
+    args          => {path=>"p", string=>"foo"},
     reset_state   => sub {
         remove_tree "p";
-        write_file "p", "";
+        write_file "p", "my foo";
     },
     status        => 304,
 );
 test_tx_action(
-    name          => "truncate",
+    name          => "append",
     tmpdir        => $tmpdir,
-    f             => "File::Truncate::Undoable::truncate",
-    args          => {path=>"p"},
+    f             => "File::Append::Undoable::append",
+    args          => {path=>"p", string=>"foo"},
     reset_state   => sub {
         remove_tree "p";
-        write_file "p", "foo";
+        write_file "p", "bar";
         chmod 0614, "p";
     },
     after_do      => sub {
         my @st = stat "p";
         ok( (-f _), "file exists");
         is($st[2] & 07777, 0614, "file mode");
-        ok(!(-s _), "file is truncated");
+        is(scalar(read_file "p"), "barfoo", "string appended");
     },
     after_undo    => sub {
         my @st = stat "p";
         ok( (-f _), "file exists");
         is($st[2] & 07777, 0614, "file mode");
-        is(scalar(read_file "p"), "foo", "file content is restored");
+        is(scalar(read_file "p"), "bar", "file content is restored");
     },
 );
 
