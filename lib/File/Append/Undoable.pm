@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Log::Any '$log';
 
-use File::Append::Undoable;
+use File::Trash::Undoable;
 use File::Copy;
 
 # VERSION
