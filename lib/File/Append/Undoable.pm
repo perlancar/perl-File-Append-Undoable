@@ -1,5 +1,8 @@
 package File::Append::Undoable;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
@@ -7,8 +10,6 @@ use Log::Any '$log';
 
 use File::Trash::Undoable;
 use File::Copy;
-
-# VERSION
 
 our %SPEC;
 
@@ -120,7 +121,7 @@ sub append {
 }
 
 1;
-# ABSTRACT: Append string to a file, with undo support
+# ABSTRACT:
 
 =head1 SEE ALSO
 
