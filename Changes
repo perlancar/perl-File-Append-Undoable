@@ -1,11 +1,11 @@
-0.05    2017-07-10 (PERLANCAR)
+0.05    2017-07-10  Released-By: PERLANCAR
 
 	- No functional changes.
 
 	- Replace Log::Any with Log::ger.
 
 
-0.04    2015-09-03 (PERLANCAR)
+0.04    2015-09-03  Released-By: PERLANCAR
 
 	- No functional changes.
 
@@ -14,20 +14,20 @@
 	  requirement.
 
 
-0.03    2015-08-17 (PERLANCAR)
+0.03    2015-08-17  Released-By: PERLANCAR
 
 	- No functional changes.
 
 	- Switch from Log::Any to Log::Any::IfLOG.
 
 
-0.02    2014-05-17 (SHARYANTO)
+0.02    2014-05-17  Released-By: SHARYANTO
 
         - No functional changes.
 
          - Replace File::Slurp with File::Slurp::Tiny.
 
 
-0.01    2012-09-06 (SHARYANTO)
+0.01    2012-09-06  Released-By: SHARYANTO
 
         - First release.
